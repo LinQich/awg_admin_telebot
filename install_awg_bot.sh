@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [[ $EUID -ne 0 ]]; then
-  echo "Запусти от root: sudo bash install_awg_bot_autoinstall_final.sh" >&2
+  echo "Запусти от root: sudo bash install_awg_bot_autoinstall_no_pip_update.sh" >&2
   exit 1
 fi
 
@@ -19,10 +19,7 @@ apt install -y python3 python3-pip git qrencode
 # Удаляем pyTelegramBotAPI из apt, если он стоит
 apt remove -y python3-pytelegrambotapi || true
 
-# Обновляем pip, setuptools, wheel
-pip3 install --break-system-packages -U pip setuptools wheel
-
-# Устанавливаем нужные библиотеки
+# Устанавливаем нужные библиотеки (без обновления pip)
 pip3 install --break-system-packages "python-telegram-bot>=20,<22" "qrcode[pil]" pillow
 
 # === 3. Размещение бота ===
