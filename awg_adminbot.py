@@ -563,6 +563,26 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("🚫 Доступ запрещен")
         return
     from telegram import ReplyKeyboardMarkup
+
+BOT_PARAMS_PATH = "/etc/amnezia/amneziawg/bot_params"
+
+def load_env_from_file(path):
+    import os
+    if os.path.exists(path):
+        with open(path, "r") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if "=" in line:
+                    k, v = line.split("=", 1)
+                    os.environ[k.strip()] = v.strip()
+
+# Загружаем переменные из файла, если их нет в окружении
+import os
+if not os.getenv("BOT_TOKEN") or not os.getenv("ADMIN_IDS"):
+    load_env_from_file(BOT_PARAMS_PATH)
+
     reply_kb = ReplyKeyboardMarkup([["📂 Меню"]], resize_keyboard=True)
     await update.message.reply_text('🔹 Выберите действие:', reply_markup=reply_kb)
 
